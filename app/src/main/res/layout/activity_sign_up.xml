@@ -84,12 +84,19 @@
             android:layout_marginLeft="100dp"
             android:text="@string/email"
             />
+
         <EditText
+            android:id="@+id/txtEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:hint="@string/example_email"
             android:id="@+id/txtEmail"
             android:inputType="textEmailAddress"/>
+=======
+            android:hint="example@mail.com"
+            android:inputType="textWebEmailAddress" />
+>>>>>>> 0e0d3703077891c062764456651c3cb2446c5303
     </LinearLayout>
 
     <Button android:id="@+id/buttonSubmit"
