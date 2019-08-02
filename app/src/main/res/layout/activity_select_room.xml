@@ -28,6 +28,7 @@ tools:context=".SelectRoomActivity">
                 android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:text="@string/user_score" />
 
             <TextView
@@ -113,6 +114,7 @@ tools:context=".SelectRoomActivity">
             >
 
             <TextView
+                android:id="@+id/room1Name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -124,6 +126,7 @@ tools:context=".SelectRoomActivity">
                 />
 
             <TextView
+                android:id="@+id/room1Status"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -155,6 +158,7 @@ tools:context=".SelectRoomActivity">
             >
 
             <TextView
+                android:id="@+id/room2Name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -166,6 +170,7 @@ tools:context=".SelectRoomActivity">
                 />
 
             <TextView
+                android:id="@+id/room2Status"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -181,10 +186,8 @@ tools:context=".SelectRoomActivity">
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"
+                android:onClick="join2Pressed"
                 android:text="@string/join"/>
-
-
-
 
         </TableRow>
 
@@ -197,10 +200,11 @@ tools:context=".SelectRoomActivity">
             >
 
             <TextView
+                android:id="@+id/room3Name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=" room2"
+                android:text=" room3"
                 android:layout_margin="1dp"
                 android:layout_column="0"
                 android:background="#FFFFFF"
@@ -208,6 +212,7 @@ tools:context=".SelectRoomActivity">
                 />
 
             <TextView
+                android:id="@+id/room3Status"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -223,6 +228,7 @@ tools:context=".SelectRoomActivity">
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"
+                android:onClick="join3Pressed"
                 android:text="@string/join"/>
 
 
@@ -294,6 +300,7 @@ tools:context=".SelectRoomActivity">
         >
 
         <TextView
+            android:id="@+id/first_player"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -305,6 +312,7 @@ tools:context=".SelectRoomActivity">
             />
 
         <TextView
+            android:id="@+id/first_score"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -330,6 +338,7 @@ tools:context=".SelectRoomActivity">
         >
 
         <TextView
+            android:id="@+id/second_player"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -341,6 +350,7 @@ tools:context=".SelectRoomActivity">
             />
 
         <TextView
+            android:id="@+id/second_score"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -367,6 +377,7 @@ tools:context=".SelectRoomActivity">
         >
 
         <TextView
+            android:id="@+id/third_player"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -378,6 +389,7 @@ tools:context=".SelectRoomActivity">
             />
 
         <TextView
+            android:id="@+id/third_score"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"

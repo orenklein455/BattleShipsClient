@@ -8,10 +8,12 @@
     tools:context=".InGameActivity">
 
     <TextView
-        android:textSize="20sp"
+        android:id="@+id/status_display"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/status" />
+        android:background="#FFFF00"
+         />
 
     <TextView
         android:textSize="20dp"
@@ -25,10 +27,12 @@
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
         android:layout_marginTop="0dp"
+        android:id="@+id/opponent_table"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="0,1,2,3,4"
         android:gravity="center">
+
 
 
         <TableRow
@@ -265,19 +269,24 @@
 
             <Button android:id="@+id/btnYourBoard0-0"
                 android:layout_width="0dp"
+
                 android:layout_height="match_parent"
+                android:tag="0_0"
                 android:layout_marginTop="0dp"
-                android:enabled="false"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard0-1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:tag="0_1"
+
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard0-2"
                 android:layout_width="0dp"
+                android:tag="0_2"
+
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
@@ -285,11 +294,14 @@
             <Button android:id="@+id/btnYourBoard0-3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:tag="0_3"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard0-4"
                 android:layout_width="0dp"
+                android:tag="0_4"
+
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
@@ -309,28 +321,34 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
+                android:tag="1_0"
+
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard1-1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:tag="1_1"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard1-2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:tag="1_2"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard1-3"
                 android:layout_width="0dp"
+                android:tag="1_3"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard1-4"
                 android:layout_width="0dp"
+                android:tag="1_4"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
@@ -349,30 +367,35 @@
 
             <Button android:id="@+id/btnYourBoard2-0"
                 android:layout_width="0dp"
+                android:tag="2_0"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard2-1"
                 android:layout_width="0dp"
+                android:tag="2_1"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard2-2"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:tag="2_2"
+               android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard2-3"
                 android:layout_width="0dp"
+                android:tag="2_3"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard2-4"
                 android:layout_width="0dp"
+                android:tag="2_4"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
@@ -389,30 +412,38 @@
 
             <Button android:id="@+id/btnYourBoard3-0"
                 android:layout_width="0dp"
+                android:tag="3_0"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard3-1"
                 android:layout_width="0dp"
+                android:tag="3_1"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard3-2"
                 android:layout_width="0dp"
+                android:tag="3_2"
+
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard3-3"
                 android:layout_width="0dp"
+                android:tag="3_3"
+
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard3-4"
                 android:layout_width="0dp"
+                android:tag="3_4"
+
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
@@ -429,12 +460,14 @@
 
             <Button android:id="@+id/btnYourBoard4-0"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:tag="4_0"
+               android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard4-1"
                 android:layout_width="0dp"
+                android:tag="4_1"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
@@ -442,17 +475,20 @@
             <Button android:id="@+id/btnYourBoard4-2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:tag="4_2"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard4-3"
                 android:layout_width="0dp"
+                android:tag="4_3"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>
 
             <Button android:id="@+id/btnYourBoard4-4"
                 android:layout_width="0dp"
+                android:tag="4_4"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"/>

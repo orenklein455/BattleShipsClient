@@ -1,4 +1,7 @@
 <resources>
+    <string name="http_s">http</string>
+    <string name="server_ip">10.0.2.2</string>
+    <string name="server_port">8080</string>
     <string name="app_name">BattleShips</string>
 
     <string name="welcome">Welcome to BattleShips!</string>
@@ -22,20 +25,21 @@
     <string name="email">e-mail :</string>
     <string name="example_email">example@gmail.com</string>
     <string name="submit">Submit</string>
+    <string name="user_created">User account has been created successfully </string>
 
 
     <string name="send_details">Send</string>
+    <string name="details_sent">Details have been sent successfully </string>
 
 
-    <string name="logged_user">User:</string>
-    <string name="user_score">Score: </string>
-    <string name="user_rank">Rank: </string>
+    <string name="logged_user">My name:</string>
+    <string name="user_score">My score: </string>
     <string name="game_rooms">Game Rooms</string>
     <string name="join">Join</string>
     <string name="top_players">Top 3 Players</string>
 
 
-    <string name="status">Status: </string>
+    <!--<string name="status">Status: </string>-->
     <string name="opponent_board">Opponent\'s board: </string>
     <string name="your_board">Your board: </string>
     <string name="empty_field_error">All fields are mandatory! </string>
@@ -43,8 +47,20 @@
     <string name="passwords_dont_match">Passwords don\'t match! </string>
     <string name="password_length">Password must contain 5-8 characters </string>
     <string name="incorrect_email">Please use a standard email address  </string>
-    <string name="enter_user_pass">Please enter username and password </string>
+    <string name="enter_user">Please enter username</string>
+    <string name="enter_password">Please enter password</string>
     <string name="user_doesnt_exist">User doesn\'t exist </string>
     <string name="wrong_password">Wrong password </string>
+    <string name="signed_in">You are signed in </string>
+
+    <string name="bad_location">Ship can be placed in horizontally or vertically adjacent cells only </string>
+    <string name="bad_choice">You have already bombed this cell </string>
+
+    <string name="full_room">Room is full </string>
+
+
+
+
+
 
 </resources>

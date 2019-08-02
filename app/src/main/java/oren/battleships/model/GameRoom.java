@@ -1,14 +1,25 @@
 package oren.battleships.model;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+
 public class GameRoom {
 
-    public final int MAX_OBSERVERS = 2;
+   // public final int MAX_OBSERVERS = 3;
 
-
+   // @SerializedName("name")
     private String name;
+ //   @SerializedName("game")
     private Game game;
-    private Player[] observers;
+  //  @SerializedName("observers")
+  //  private ArrayList<Player> observers;
+  //  @SerializedName("currentState")
+    private GameRoomState currentState;
+    public enum GameRoomState{EMPTY, NOT_EMPTY, FULL}
 
+
+    //name getter & setter
     public String getName() {
         return name;
     }
@@ -17,39 +28,38 @@ public class GameRoom {
         this.name = name;
     }
 
+    //game getter & setter
     public Game getGame() {
         return game;
     }
-
     public void setGame(Game game) {
         this.game = game;
     }
 
-    public Player[] getObservers() {
-        return observers;
-    }
+    //players getter & setter
+//    public ArrayList<Player> getObservers() {
+//        return observers;
+//    }
+//    public void setObservers(ArrayList<Player> players) {
+//        this.observers = players;
+//    }
 
-    public void setObservers(Player[] observers) {
-        this.observers = observers;
-    }
-
+    //currentState getter & setter
     public GameRoomState getCurrentState() {
         return currentState;
     }
-
-    public void setCurrentState(GameRoomState currentState) {
-        this.currentState = currentState;
+    public void setCurrentState()
+    {
+        if (game.getPlayers().isEmpty()) currentState = GameRoomState.EMPTY;
+        else if (game.getPlayers().size() == 2) currentState = GameRoomState.FULL;
+        else currentState = GameRoomState.NOT_EMPTY;
     }
-
-    public enum GameRoomState{EMPTY, ALMOST_FULL, FULL}
-    private GameRoomState currentState;
-
 
     public GameRoom(String name)
     {
         this.setName(name);
-        this.setObservers(new Player[3]);
-        this.setCurrentState(GameRoomState.EMPTY);
-        this.setGame(new Game());
+        this.game = new Game();
+      //  observers = new ArrayList<Player>();
+        this.setCurrentState();
     }
 }

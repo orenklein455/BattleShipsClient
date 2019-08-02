@@ -89,10 +89,10 @@
             android:layout_height="wrap_content"
             android:hint="@string/example_email"
             android:id="@+id/txtEmail"
-            android:inputType="textPassword"/>
+            android:inputType="textEmailAddress"/>
     </LinearLayout>
 
-    <Button android:id="@+id/btnSubmit"
+    <Button android:id="@+id/buttonSubmit"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
