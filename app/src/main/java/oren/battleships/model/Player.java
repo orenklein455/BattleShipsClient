@@ -1,9 +1,9 @@
 package oren.battleships.model;
 
-import com.google.gson.annotations.SerializedName;
+//import com.google.gson.annotations.SerializedName;
 
 public class Player {
-    @SerializedName("userName")
+//    @SerializedName("userName")
     private String userName;
 //    @SerializedName("password")
 //    private String password;

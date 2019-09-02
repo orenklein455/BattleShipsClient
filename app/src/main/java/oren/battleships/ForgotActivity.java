@@ -38,6 +38,7 @@ public class ForgotActivity extends AppCompatActivity {
 
         Intent intent = new Intent(ForgotActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
 }

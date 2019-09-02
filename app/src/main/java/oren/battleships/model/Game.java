@@ -1,43 +1,37 @@
 package oren.battleships.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class Game {
 
     public enum GameState{ACTIVE, CREATING ,GAME_OVER}
 
-    public final int NUM_PLAYERS = 2;
-    @SerializedName("state")
+    private final int NUM_PLAYERS = 2;
     private GameState state;
-    @SerializedName("players")
     private ArrayList<Player> players;
-    @SerializedName("playerTurn")
     private int playerTurn;
-    @SerializedName("board")
     private Board board;
-    @SerializedName("opponent_board")
     private Board opponent_board;
-    @SerializedName("place_ships")
-    private int place_ships;
+    public Boolean winner_knows;
+    public Boolean loser_knows;
 
     public Game()
     {
-        board = new Board(5);
-        opponent_board = new Board(5);
+        board = new Board(5,"myOne");
+        opponent_board = new Board(5, "opponent'sOne");
         state = GameState.CREATING;
         players = new ArrayList<Player>();
-        playerTurn = 0;
-        place_ships = 0;
+        winner_knows = false;
+        loser_knows = false;
     }
 
-    public void setPlacedShips(int num) {
-        this.place_ships = num;
-    }
-    public int getPlacedShips() {
-        return place_ships;
+    public void resetGame() {
+        players.clear();
+        state = GameState.CREATING;
+        board.resetBoard("myOne");
+        opponent_board.resetBoard("opponent'sOne");
+        winner_knows = false;
+        loser_knows = false;
     }
 
     //state getter & setter
@@ -68,13 +62,13 @@ public class Game {
         players.add(player);
     }
 
-    //playerTurn getter & setter
-    public int getPlayerTurn() {
-        return playerTurn;
-    }
-    public void setNextPlayerTurn () {
-        playerTurn = (playerTurn++)%NUM_PLAYERS;
-    }
+//    //playerTurn getter & setter
+//    public int getPlayerTurn() {
+//        return playerTurn;
+//    }
+//    public void setNextPlayerTurn () {
+//        playerTurn = (playerTurn++)%2;
+//    }
 
     //board getter & setter
     public Board getBoard() { return board; }
@@ -83,9 +77,10 @@ public class Game {
     }
 
     //opponent_board getter & setter
-    public Board getOpponentBoard() { return opponent_board; }
+    public Board getOpponentBoard() { return this.opponent_board; }
+
     public void setOpponentBoard(Board board) {
-        this.opponent_board = opponent_board;
+        this.opponent_board = board;
     }
 
 }

@@ -36,12 +36,6 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         }
 
-//        if (MyApplication.getInstance().getPlayers().containsKey(txtUser.getText().toString()))
-//        {
-//            Toast.makeText(this,R.string.user_already_exists,Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
-
         if (!(txtPass.getText().toString().equals(txtPass2.getText().toString())))
         {
             Toast.makeText(this,R.string.passwords_dont_match,Toast.LENGTH_SHORT).show();
@@ -69,9 +63,6 @@ public class SignUpActivity extends AppCompatActivity {
             return;
 
         new CreateUser().execute();
-
-//        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-//        startActivity(intent);
     }
 
     private class CreateUser extends AsyncTask<Void, Void, Void> {
@@ -79,14 +70,13 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-           msg = txtUser.getText().toString() + "_" + txtPass.getText().toString() + "_" + txtMail.getText().toString();
+            msg = txtUser.getText().toString() + "_" + txtPass.getText().toString() + "_" + txtMail.getText().toString();
         }
 
         @Override
         protected Void doInBackground(Void...args0)  {
             HttpHandler sh = new HttpHandler();
             // Making a request to url and getting response
-          //  String url =getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/gameroom/1";
             String url =getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/signUp";
 
             String jsonStr = null;
@@ -111,6 +101,7 @@ public class SignUpActivity extends AppCompatActivity {
                     });
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
 
                 if (jsonStr.equals("user_exists")) {
@@ -136,14 +127,11 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
             }
-
             return null;
         }
-
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-
 
         }
     }

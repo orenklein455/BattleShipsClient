@@ -42,21 +42,16 @@ public class HttpHandler {
 
     public String SendPost(String reqUrl, String message) throws Exception {
 
-//        String url = "https://selfsolve.apple.com/wcResults.do";
-
         URL obj = new URL(reqUrl);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         //add request header
         con.setRequestMethod("POST");
-//        con.setRequestProperty("User-Agent", USER_AGENT);
-//        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-//        String urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
 
         // Send post request
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+
         wr.writeBytes(message);
         wr.flush();
         wr.close();

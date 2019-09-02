@@ -57,6 +57,8 @@
     <string name="bad_choice">You have already bombed this cell </string>
 
     <string name="full_room">Room is full </string>
+    <string name="update_succeded">Update succeded </string>
+    <string name="received_successfully">Server has received the board </string>
 
 
 

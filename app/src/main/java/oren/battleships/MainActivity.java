@@ -1,7 +1,6 @@
 package oren.battleships;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,20 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-import oren.battleships.model.GameRoom;
-import oren.battleships.model.Player;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void...args0)  {
             HttpHandler sh = new HttpHandler();
             // Making a request to url and getting response
-            //  String url =getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/gameroom/1";
             String url =getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/signIn";
 
             String jsonStr = null;
@@ -144,8 +129,6 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_LONG).show();
                         }
                     });
-                   // int score = Integer.getInteger(jsonStr.substring(9));
-                   // MyApplication.getInstance().setCurrentPlayer(new Player(txtUserN.getText().toString(), txtPassword.getText().toString(), ));
 
                     intent = new Intent(MainActivity.this, SelectRoomActivity.class);
                     intent.putExtra("USER", username);

@@ -10,21 +10,44 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import oren.battleships.model.GameRoom;
 import oren.battleships.model.Player;
 
 public class SelectRoomActivity extends AppCompatActivity {
 
     private TextView txtUserDisplay,txtScoreDisplay;
-    private TextView firstPlaceDisplay, secondPlaceDisplay, thirdPlaceDisplay;
-    private TextView firstScoreDisplay, secondScoreDisplay, thirdScoreDisplay;
-    private TextView room1StatDisp, room2StatDisp, room3StatDisp, room1NameDisp, room2NameDisp, room3NameDisp;
+    public static int room;
     public static String user;
-    public static String user_score, room1_state, room2_state, room3_state, room1_name, room2_name, room3_name, top_user1, top_user2, top_user3, top_score1, top_score2, top_score3;
+    public static String user_score;
+
     private String TAG = SelectRoomActivity.class.getSimpleName();
+
+    public static String[] room_state;
+    public static String[] room_name;
+    public static String[] top_user;
+    public static String[] top_score;
+
+    public static TextView[] room_stat_disp;
+    public static TextView[] room_name_disp;
+    public static TextView[] score_disp;
+    public static TextView[] place_disp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        room_state = new String[3];
+        room_name = new String[3];
+        top_user = new String[3];
+        top_score = new String[3];
+        room_stat_disp = new TextView[3];
+        room_name_disp = new TextView[3];
+        score_disp = new TextView[3];
+        place_disp = new TextView[3];
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_room);
         user = getIntent().getStringExtra("USER");
@@ -33,24 +56,30 @@ public class SelectRoomActivity extends AppCompatActivity {
 
         txtScoreDisplay = (TextView)findViewById(R.id.scoreDisplay);
 
-        firstPlaceDisplay = (TextView)findViewById(R.id.first_player);
-        secondPlaceDisplay = (TextView)findViewById(R.id.second_player);
-        thirdPlaceDisplay = (TextView)findViewById(R.id.third_player);
+        place_disp[0] = (TextView)findViewById(R.id.first_player);
+        place_disp[1] = (TextView)findViewById(R.id.second_player);
+        place_disp[2] = (TextView)findViewById(R.id.third_player);
 
-        firstScoreDisplay = (TextView)findViewById(R.id.first_score);
-        secondScoreDisplay = (TextView)findViewById(R.id.second_score);
-        thirdScoreDisplay = (TextView)findViewById(R.id.third_score);
+        score_disp[0] = (TextView)findViewById(R.id.first_score);
+        score_disp[1] = (TextView)findViewById(R.id.second_score);
+        score_disp[2] = (TextView)findViewById(R.id.third_score);
 
-        room1StatDisp = (TextView)findViewById(R.id.room1Status);
-        room2StatDisp = (TextView)findViewById(R.id.room2Status);
-        room3StatDisp = (TextView)findViewById(R.id.room3Status);
+        room_stat_disp[0] = (TextView)findViewById(R.id.room1Status);
+        room_stat_disp[1] = (TextView)findViewById(R.id.room2Status);
+        room_stat_disp[2] = (TextView)findViewById(R.id.room3Status);
 
-        room1NameDisp = (TextView)findViewById(R.id.room1Name);
-        room2NameDisp = (TextView)findViewById(R.id.room2Name);
-        room3NameDisp = (TextView)findViewById(R.id.room3Name);
+        room_name_disp[0] = (TextView)findViewById(R.id.room1Name);
+        room_name_disp[1] = (TextView)findViewById(R.id.room2Name);
+        room_name_disp[2] = (TextView)findViewById(R.id.room3Name);
 
-        //room1NameDisp
-        new GetLobbyData().execute();
+//        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+//        exec.scheduleWithFixedDelay(new Runnable() {
+//            @Override
+//            public void run() {
+//            }
+//        }, 0, 4000, TimeUnit.MILLISECONDS);
+                new GetLobbyData().execute();
+
     }
 
     private class GetLobbyData extends AsyncTask<Void, Void, Void> {
@@ -75,39 +104,29 @@ public class SelectRoomActivity extends AppCompatActivity {
 
                 String data[] = jsonStr.split("_");
                 if (data!=null && data.length==13) {
+
+                    for (int i = 0; i < 3; i++) {
+                        room_state[i] = data[i+1];
+                        room_name[i] = data[i+4];
+                    }
                     user_score = data[0];
-                    room1_state = data[1];
-                    room2_state = data[2];
-                    room3_state = data[3];
-                    room1_name = data[4];
-                    room2_name = data[5];
-                    room3_name = data[6];
-                    top_user1 = data[7];
-                    top_score1 = data[8];
-                    top_user2 = data[9];
-                    top_score2 = data[10];
-                    top_user3 = data[11];
-                    top_score3 = data[12];
+                    top_user[0] = data[7];
+                    top_score[0] = data[8];
+                    top_user[1] = data[9];
+                    top_score[1] = data[10];
+                    top_user[2] = data[11];
+                    top_score[2] = data[12];
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             txtScoreDisplay.setText(user_score);
 
-                            room1StatDisp.setText(room1_state);
-                            room2StatDisp.setText(room2_state);
-                            room3StatDisp.setText(room3_state);
-
-                            room1NameDisp.setText(room1_name);
-                            room2NameDisp.setText(room2_name);
-                            room3NameDisp.setText(room3_name);
-
-                            firstPlaceDisplay.setText(top_user1);
-                            secondPlaceDisplay.setText(top_user2);
-                            thirdPlaceDisplay.setText(top_user3);
-
-                            firstScoreDisplay.setText(top_score1);
-                            secondScoreDisplay.setText(top_score2);
-                            thirdScoreDisplay.setText(top_score3);
+                            for (int i = 0; i < 3; i++) {
+                                room_stat_disp[i].setText(room_state[i]);
+                                room_name_disp[i].setText(room_name[i]);
+                                place_disp[i].setText(top_user[i]);
+                                score_disp[i].setText(top_score[i]);
+                            }
                         }
                     });
                 }
@@ -126,6 +145,65 @@ public class SelectRoomActivity extends AppCompatActivity {
 
             return null;
         }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+    }
+
+    private class joinRoom extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer...args0)  {
+            room = args0[0];
+            HttpHandler sh = new HttpHandler();
+            // Making a request to url and getting response
+            String url = getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/joinRoom";
+
+            String jsonStr = null;
+            try {
+                jsonStr = sh.SendPost(url, user + "_" + room);
+            } catch (Exception e) { e.printStackTrace(); }
+            Log.e(TAG, "Response from url: " + jsonStr);
+            if (jsonStr != null) {
+                if (jsonStr.equals("full")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            room_state[room] = "Full";
+                            room_stat_disp[room].setText(room_state[room]);
+                            Toast.makeText(getApplicationContext(),
+                                    "This room is full",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
+                else if (jsonStr.equals("joined")) {
+                    Intent intent = new Intent(SelectRoomActivity.this, InGameActivity.class);
+                    intent.putExtra("ROOM_NUMBER",room);
+                    intent.putExtra("USER", user);
+                    startActivity(intent);
+                    finish();
+                }
+
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            return null;
+        }
 
         @Override
         protected void onPostExecute(Void result) {
@@ -135,34 +213,16 @@ public class SelectRoomActivity extends AppCompatActivity {
 
     public void join1Pressed(View view)
     {
-        // ToDo - check room's status in the server
-        if (MyApplication.getInstance().getMyAllRooms()[0].getCurrentState() == GameRoom.GameRoomState.FULL) {
-            Toast.makeText(this,R.string.full_room,Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // ToDo - add player to the server's room.game.players
-        MyApplication.getInstance().getMyAllRooms()[0].getGame().getPlayers().add(new Player(user));
-        MyApplication.getInstance().getMyAllRooms()[0].setCurrentState();
-        Intent intent = new Intent(SelectRoomActivity.this, InGameActivity.class);
-        intent.putExtra("ROOM_NUMBER",0);
-        intent.putExtra("USER", user);
-
-        startActivity(intent);
+        new joinRoom().execute(0);
     }
 
     public void join2Pressed(View view)
     {
-        Intent intent = new Intent(SelectRoomActivity.this, InGameActivity.class);
-        intent.putExtra("ROOM_NUMBER",1);
-        startActivity(intent);
+        new joinRoom().execute(1);
     }
 
     public void join3Pressed(View view)
     {
-        Intent intent = new Intent(SelectRoomActivity.this, InGameActivity.class);
-        intent.putExtra("ROOM_NUMBER",2);
-        startActivity(intent);
+        new joinRoom().execute(2);
     }
-
-
 }
