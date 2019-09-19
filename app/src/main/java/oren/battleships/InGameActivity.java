@@ -193,8 +193,8 @@ public class InGameActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(String... args0) {
-            HttpHandler sh = new HttpHandler();
-            String url = getString(R.string.http_s) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/sendBoard";
+            APIConsumer sh = new APIConsumer();
+            String url = getString(R.string.protocol) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/sendBoard";
 
             String jsonStrSent = null;
             Board board_to_send = null;
@@ -248,9 +248,9 @@ public class InGameActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Void... args0) {
             msg = user + "_" + roomNumber;
-            HttpHandler sh = new HttpHandler();
+            APIConsumer sh = new APIConsumer();
             // Making a request to url and getting response
-            String url = getString(R.string.http_s) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/checkStatus";
+            String url = getString(R.string.protocol) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/checkStatus";
 
             String jsonStr = null;
             try {
@@ -350,9 +350,9 @@ public class InGameActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... args0) {
-            HttpHandler sh = new HttpHandler();
+            APIConsumer sh = new APIConsumer();
             // Making a request to url and getting response
-            String url = getString(R.string.http_s) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/getBoard";
+            String url = getString(R.string.protocol) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/getBoard";
 
             String jsonStr = null;
             try {

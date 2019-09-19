@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText txtUser, txtPass, txtPass2, txtMail;
@@ -67,29 +70,31 @@ public class SignUpActivity extends AppCompatActivity {
 
     private class CreateUser extends AsyncTask<Void, Void, Void> {
         private String msg;
+        private HashMap<String, String> parameters = new HashMap<>();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            msg = txtUser.getText().toString() + "_" + txtPass.getText().toString() + "_" + txtMail.getText().toString();
+            parameters.put("username", txtUser.getText().toString());
+            parameters.put("password", txtPass.getText().toString());
         }
 
         @Override
         protected Void doInBackground(Void...args0)  {
-            HttpHandler sh = new HttpHandler();
+            APIConsumer sh = new APIConsumer();
             // Making a request to url and getting response
-            String url =getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/signUp";
+            String url =getString(R.string.protocol) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/signUp";
 
-            String jsonStr = null;
+            Map jsonResult = null;
             try {
-                jsonStr = sh.SendPost(url, msg);
+                jsonResult = sh.send_post(url, parameters);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            Log.e(TAG, "Response from url: " + jsonStr);
-            if (jsonStr != null) {
+            Log.e(TAG, "Response from url: " + jsonResult);
+            if (jsonResult != null) {
 
-                if (jsonStr.equals("completed")) {
+                if (jsonResult.get("message").equals("completed")) {
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -104,7 +109,7 @@ public class SignUpActivity extends AppCompatActivity {
                     finish();
                 }
 
-                if (jsonStr.equals("user_exists")) {
+                if (jsonResult.get("message").equals("user_exists")) {
 
                     runOnUiThread(new Runnable() {
                         @Override

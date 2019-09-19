@@ -1,5 +1,5 @@
 <resources>
-    <string name="http_s">http</string>
+    <string name="protocol">http</string>
     <string name="server_ip">10.0.2.2</string>
     <string name="server_port">8080</string>
     <string name="app_name">BattleShips</string>
@@ -13,7 +13,7 @@
     <string name="password">Password :</string>
     <string name="enter_pass">Enter password</string>
 
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in">Sign in</string>~
     <string name="sign_up">Sign up</string>
     <string name="forgot_password">Forgot User / Password?</string>
 

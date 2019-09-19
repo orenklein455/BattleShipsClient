@@ -11,6 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText txtUserN;
@@ -20,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnForgotPassword;
     private String TAG = MainActivity.class.getSimpleName();
     public static Intent intent;
-    public  static String username;
+    public static String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { // activity's previously saved state
@@ -71,31 +76,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class SignIn extends AsyncTask<Void, Void, Void> {
-        private String msg;
+        private HashMap<String, String> parameters = new HashMap<>();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            msg = txtUserN.getText().toString() + "_" + txtPassword.getText().toString();
-            username = txtUserN.getText().toString();
+            parameters.put("username", txtUserN.getText().toString());
+            parameters.put("password", txtPassword.getText().toString());
         }
 
         @Override
         protected Void doInBackground(Void...args0)  {
-            HttpHandler sh = new HttpHandler();
+            APIConsumer apiConsumer = new APIConsumer();
             // Making a request to url and getting response
-            String url =getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/signIn";
+            String url = getString(R.string.protocol) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/signIn";
 
-            String jsonStr = null;
+            Map jsonResult = null;
             try {
-                jsonStr = sh.SendPost(url, msg);
+                jsonResult = apiConsumer.send_post(url, parameters);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            Log.e(TAG, "Response from url: " + jsonStr);
-            if (jsonStr != null) {
-
-                if (jsonStr.equals("user_doesn't_exist")) {
+            Log.e(TAG, "Response from url: " + jsonResult);
+            if (jsonResult != null) {
+                if (jsonResult.get("message").equals("user_doesn't_exist")) {
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
 
-                if (jsonStr.equals("wrong_password")) {
+                if (jsonResult.get("message").equals("wrong_password")) {
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
 
-                if (jsonStr.substring(0,9).equals("signed_in")) {
+                if (jsonResult.get("message").equals("signed_in")) {
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -131,8 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                     intent = new Intent(MainActivity.this, SelectRoomActivity.class);
-                    intent.putExtra("USER", username);
-                    intent.putExtra("SCORE", jsonStr.substring(9));
+                    intent.putExtra("USER", parameters.get("username"));
                     startActivity(intent);
                 }
             } else {

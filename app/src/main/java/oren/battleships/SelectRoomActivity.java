@@ -6,16 +6,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import oren.battleships.model.GameRoom;
-import oren.battleships.model.Player;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SelectRoomActivity extends AppCompatActivity {
 
@@ -26,11 +24,11 @@ public class SelectRoomActivity extends AppCompatActivity {
 
     private String TAG = SelectRoomActivity.class.getSimpleName();
 
-    public static String[] room_state;
-    public static String[] room_name;
+    public static ArrayList<String> room_state;
+    public static ArrayList<String> room_name;
     public static String[] top_user;
     public static String[] top_score;
-
+    public static ArrayList<Map<String, String>> top_users;
     public static TextView[] room_stat_disp;
     public static TextView[] room_name_disp;
     public static TextView[] score_disp;
@@ -39,8 +37,8 @@ public class SelectRoomActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        room_state = new String[3];
-        room_name = new String[3];
+        room_state = new ArrayList<>();
+        room_name = new ArrayList<>();
         top_user = new String[3];
         top_score = new String[3];
         room_stat_disp = new TextView[3];
@@ -72,17 +70,13 @@ public class SelectRoomActivity extends AppCompatActivity {
         room_name_disp[1] = (TextView)findViewById(R.id.room2Name);
         room_name_disp[2] = (TextView)findViewById(R.id.room3Name);
 
-//        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-//        exec.scheduleWithFixedDelay(new Runnable() {
-//            @Override
-//            public void run() {
-//            }
-//        }, 0, 4000, TimeUnit.MILLISECONDS);
-                new GetLobbyData().execute();
+
+        new GetLobbyData().execute();
 
     }
 
     private class GetLobbyData extends AsyncTask<Void, Void, Void> {
+        private Map<String, Object> data;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -90,46 +84,42 @@ public class SelectRoomActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void...args0)  {
-            HttpHandler sh = new HttpHandler();
-            // Making a request to url and getting response
-            String url =getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/getLobbyData";
+            APIConsumer api_consumer = new APIConsumer();
 
-            String jsonStr = null;
             try {
-                jsonStr = sh.SendPost(url, user);
+                data = api_consumer.getLobbyData(user);
+
+                Log.e(TAG, data.toString());
             } catch (Exception e) { e.printStackTrace(); }
 
-            Log.e(TAG, "Response from url: " + jsonStr);
-            if (jsonStr != null) {
+            Log.e(TAG, "Response from url: " + data.toString());
+            if (data != null) {
+                    Map<String, String> room_data = (Map<String, String>) data.get("rooms");
 
-                String data[] = jsonStr.split("_");
-                if (data!=null && data.length==13) {
-
-                    for (int i = 0; i < 3; i++) {
-                        room_state[i] = data[i+1];
-                        room_name[i] = data[i+4];
+                    for (Map.Entry<String,String> entry : room_data.entrySet()){
+                        room_name.add(entry.getKey());
+                        room_state.add(entry.getValue());
                     }
-                    user_score = data[0];
-                    top_user[0] = data[7];
-                    top_score[0] = data[8];
-                    top_user[1] = data[9];
-                    top_score[1] = data[10];
-                    top_user[2] = data[11];
-                    top_score[2] = data[12];
+                    user_score = (String)data.get("my_score");
+                    top_users = (ArrayList<Map<String, String>>)data.get("top_users");
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             txtScoreDisplay.setText(user_score);
+                            int i = 0;
+                            for (Map<String,String> user: top_users){
+                                place_disp[i].setText(user.get("username"));
+                                score_disp[i].setText(user.get("score"));
+                                i++;
+                            }
+                            for (i = 0; i < room_name.size(); i++) {
+                                room_stat_disp[i].setText(room_state.get(i));
+                                room_name_disp[i].setText(room_name.get(i));
 
-                            for (int i = 0; i < 3; i++) {
-                                room_stat_disp[i].setText(room_state[i]);
-                                room_name_disp[i].setText(room_name[i]);
-                                place_disp[i].setText(top_user[i]);
-                                score_disp[i].setText(top_score[i]);
                             }
                         }
                     });
-                }
 
             } else {
                 Log.e(TAG, "Couldn't get json from server.");
@@ -160,9 +150,9 @@ public class SelectRoomActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Integer...args0)  {
             room = args0[0];
-            HttpHandler sh = new HttpHandler();
+            APIConsumer sh = new APIConsumer();
             // Making a request to url and getting response
-            String url = getString(R.string.http_s) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/joinRoom";
+            String url = getString(R.string.protocol) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/joinRoom";
 
             String jsonStr = null;
             try {
@@ -174,8 +164,8 @@ public class SelectRoomActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            room_state[room] = "Full";
-                            room_stat_disp[room].setText(room_state[room]);
+                            room_state.set(room, "Full");
+                            room_stat_disp[room].setText(room_state.get(room));
                             Toast.makeText(getApplicationContext(),
                                     "This room is full",
                                     Toast.LENGTH_LONG).show();

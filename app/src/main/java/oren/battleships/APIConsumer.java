@@ -1,6 +1,11 @@
 package oren.battleships;
 
+import android.content.res.Resources;
 import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -8,15 +13,22 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
-public class HttpHandler {
-    private static final String TAG = HttpHandler.class.getSimpleName();
 
-    public HttpHandler() {
+public class APIConsumer {
+    private static final String TAG = APIConsumer.class.getSimpleName();
+    private String protocol = "http";
+    private String address = "10.0.2.2";
+    private String port = "8080";
+
+    public APIConsumer() {
     }
 
     public String makeServiceCall(String reqUrl) {
@@ -40,8 +52,33 @@ public class HttpHandler {
         return response;
     }
 
-    public String SendPost(String reqUrl, String message) throws Exception {
+    public Map<String, Object> getLobbyData(String user) throws Exception {
+        // Making a request to url and getting response
+        String url = protocol + "://"+ address + ":" + port + "/getLobbyData";
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put("username", user);
+        Map<String, Object> result = this.send_post(url, parameters);
 
+        return result;
+    }
+
+    public Map<String, Object> send_post(String url, HashMap<String, String> parameters) throws Exception {
+        Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
+        String prettyJson = prettyGson.toJson(parameters);
+        Gson gson = new Gson();
+        String jsonString = this.SendPost(url, prettyJson);
+        Type ResultMap = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> parsedJson = gson.fromJson(jsonString, ResultMap);
+        return parsedJson;
+    }
+
+    public String SendPost(String url, HashMap<String, String> parameters) throws Exception {
+        Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
+        String prettyJson = prettyGson.toJson(parameters);
+        return this.SendPost(url, prettyJson);
+    }
+
+    public String SendPost(String reqUrl, String message) throws Exception {
         URL obj = new URL(reqUrl);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -50,13 +87,15 @@ public class HttpHandler {
 
         // Send post request
         con.setDoOutput(true);
+        con.setRequestProperty("Content-Type", "application/json; utf-8");
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-
+//        wr.writeBytes(ParameterStringBuilder.getParamsString(parameters));
         wr.writeBytes(message);
         wr.flush();
         wr.close();
 
         int responseCode = con.getResponseCode();
+
         System.out.println("\nSending 'POST' request to URL : " + obj);
         System.out.println("Post parameters : " + message);
         System.out.println("Response Code : " + responseCode);
