@@ -65,9 +65,12 @@ public class APIConsumer {
         return result;
     }
 
-    public Map<String, Object> signUp(HashMap<String, String> parameters) throws Exception {
+    public Boolean signUp(HashMap<String, String> parameters) throws Exception {
         String endpoint = "/signUp";
-        return this.send_post(endpoint, parameters);
+        Map<String, Object> result = this.send_post(endpoint, parameters);
+        Log.e(TAG, "Response from /signUp: " + result);
+        Boolean success = Boolean.parseBoolean(result.get("success").toString());
+        return success;
     }
 
     public Map<String, Object> send_post(String endpoint, HashMap<String, String> parameters) throws Exception {

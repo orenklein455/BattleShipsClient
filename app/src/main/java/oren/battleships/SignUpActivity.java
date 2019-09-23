@@ -99,10 +99,9 @@ public class SignUpActivity extends AppCompatActivity {
 
             try {
 
-                Map result = apiConsumer.signUp(parameters);
+                Boolean success = apiConsumer.signUp(parameters);
 
-                Log.e(TAG, "Response from url: " + result);
-                if (Boolean.parseBoolean(result.get("success").toString())) {
+                if (success) {
                     makeToastText(R.string.user_created);
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -112,7 +111,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e(TAG, "Couldn't get json from server.");
+                Log.e(TAG, "Couldn't get valid response from server.");
                 makeToastText("Couldn't get json from server. Check LogCat for possible errors!");
             }
 
