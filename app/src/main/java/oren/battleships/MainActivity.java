@@ -86,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void...args0)  {
-            APIConsumer apiConsumer = new APIConsumer();
+            APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
             // Making a request to url and getting response
-            String url = getString(R.string.protocol) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/signIn";
+            String endpoint = "/signIn";
 
             Map jsonResult = null;
             try {
-                jsonResult = apiConsumer.send_post(url, parameters);
+                jsonResult = apiConsumer.send_post(endpoint, parameters);
             } catch (Exception e) {
                 e.printStackTrace();
             }

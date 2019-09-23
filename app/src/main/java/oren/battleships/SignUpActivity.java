@@ -67,7 +67,20 @@ public class SignUpActivity extends AppCompatActivity {
 
         new CreateUser().execute();
     }
-
+    public void makeToastText(final int textIndex){
+        String text = getString(textIndex);
+        makeToastText(text);
+    }
+    public void makeToastText(final String text){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(),
+                        text,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
     private class CreateUser extends AsyncTask<Void, Void, Void> {
         private String msg;
         private HashMap<String, String> parameters = new HashMap<>();
@@ -78,60 +91,31 @@ public class SignUpActivity extends AppCompatActivity {
             parameters.put("password", txtPass.getText().toString());
         }
 
+
+
         @Override
         protected Void doInBackground(Void...args0)  {
-            APIConsumer sh = new APIConsumer();
-            // Making a request to url and getting response
-            String url =getString(R.string.protocol) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/signUp";
+            APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
 
-            Map jsonResult = null;
             try {
-                jsonResult = sh.send_post(url, parameters);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            Log.e(TAG, "Response from url: " + jsonResult);
-            if (jsonResult != null) {
+                Map result = apiConsumer.signUp(parameters);
 
-                if (jsonResult.get("message").equals("completed")) {
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    R.string.user_created,
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
+                Log.e(TAG, "Response from url: " + result);
+                if (Boolean.parseBoolean(result.get("success").toString())) {
+                    makeToastText(R.string.user_created);
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
+                } else {
+                    makeToastText(R.string.user_already_exists);
                 }
-
-                if (jsonResult.get("message").equals("user_exists")) {
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    R.string.user_already_exists,
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-
-            } else {
+            } catch (Exception e) {
+                e.printStackTrace();
                 Log.e(TAG, "Couldn't get json from server.");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
+                makeToastText("Couldn't get json from server. Check LogCat for possible errors!");
             }
+
             return null;
         }
         @Override

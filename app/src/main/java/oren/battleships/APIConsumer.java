@@ -24,11 +24,14 @@ import java.util.Map;
 
 public class APIConsumer {
     private static final String TAG = APIConsumer.class.getSimpleName();
-    private String protocol = "http";
-    private String address = "10.0.2.2";
-    private String port = "8080";
+    private String protocol;
+    private String address;
+    private String port;
 
-    public APIConsumer() {
+    public APIConsumer(String protocol, String address, String port) {
+        this.protocol = protocol;
+        this.address = address;
+        this.port = port;
     }
 
     public String makeServiceCall(String reqUrl) {
@@ -54,15 +57,21 @@ public class APIConsumer {
 
     public Map<String, Object> getLobbyData(String user) throws Exception {
         // Making a request to url and getting response
-        String url = protocol + "://"+ address + ":" + port + "/getLobbyData";
+        String endpoint = "/getLobbyData";
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put("username", user);
-        Map<String, Object> result = this.send_post(url, parameters);
+        Map<String, Object> result = this.send_post(endpoint, parameters);
 
         return result;
     }
 
-    public Map<String, Object> send_post(String url, HashMap<String, String> parameters) throws Exception {
+    public Map<String, Object> signUp(HashMap<String, String> parameters) throws Exception {
+        String endpoint = "/signUp";
+        return this.send_post(endpoint, parameters);
+    }
+
+    public Map<String, Object> send_post(String endpoint, HashMap<String, String> parameters) throws Exception {
+        String url = this.protocol + "://"+ this.address + ":" + this.port + endpoint;
         Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
         String prettyJson = prettyGson.toJson(parameters);
         Gson gson = new Gson();

@@ -84,10 +84,10 @@ public class SelectRoomActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void...args0)  {
-            APIConsumer api_consumer = new APIConsumer();
+            APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
 
             try {
-                data = api_consumer.getLobbyData(user);
+                data = apiConsumer.getLobbyData(user);
 
                 Log.e(TAG, data.toString());
             } catch (Exception e) { e.printStackTrace(); }
@@ -150,13 +150,13 @@ public class SelectRoomActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Integer...args0)  {
             room = args0[0];
-            APIConsumer sh = new APIConsumer();
+            APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
             // Making a request to url and getting response
             String url = getString(R.string.protocol) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/joinRoom";
 
             String jsonStr = null;
             try {
-                jsonStr = sh.SendPost(url, user + "_" + room);
+                jsonStr = apiConsumer.SendPost(url, user + "_" + room);
             } catch (Exception e) { e.printStackTrace(); }
             Log.e(TAG, "Response from url: " + jsonStr);
             if (jsonStr != null) {

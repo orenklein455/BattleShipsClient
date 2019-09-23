@@ -193,7 +193,7 @@ public class InGameActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(String... args0) {
-            APIConsumer sh = new APIConsumer();
+            APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
             String url = getString(R.string.protocol) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/sendBoard";
 
             String jsonStrSent = null;
@@ -211,7 +211,7 @@ public class InGameActivity extends AppCompatActivity {
             String jsonStrReceived = null;
 
             try {
-                jsonStrReceived = sh.SendPost(url, jsonStrSent);
+                jsonStrReceived = apiConsumer.SendPost(url, jsonStrSent);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -248,13 +248,13 @@ public class InGameActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Void... args0) {
             msg = user + "_" + roomNumber;
-            APIConsumer sh = new APIConsumer();
+            APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
             // Making a request to url and getting response
             String url = getString(R.string.protocol) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/checkStatus";
 
             String jsonStr = null;
             try {
-                jsonStr = sh.SendPost(url, msg);
+                jsonStr = apiConsumer.SendPost(url, msg);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -350,7 +350,7 @@ public class InGameActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... args0) {
-            APIConsumer sh = new APIConsumer();
+            APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
             // Making a request to url and getting response
             String url = getString(R.string.protocol) + "://" + getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/getBoard";
 
@@ -358,7 +358,7 @@ public class InGameActivity extends AppCompatActivity {
             try {
                 if (!args0[0].equals("myBoard") && !args0[0].equals("opBoard")) return null;
                 msg = user + "_" + roomNumber + "_" + args0[0];
-                jsonStr = sh.SendPost(url, msg);
+                jsonStr = apiConsumer.SendPost(url, msg);
             } catch (Exception e) {
                 e.printStackTrace();
             }
