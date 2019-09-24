@@ -152,11 +152,9 @@ public class SelectRoomActivity extends AppCompatActivity {
             room = args0[0];
             APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
             // Making a request to url and getting response
-            String url = getString(R.string.protocol) + "://"+ getString(R.string.server_ip) + ":" + getString(R.string.server_port) + "/joinRoom";
-
             String jsonStr = null;
             try {
-                jsonStr = apiConsumer.SendPost(url, user + "_" + room);
+                jsonStr = apiConsumer.joinRoom(user, room);
             } catch (Exception e) { e.printStackTrace(); }
             Log.e(TAG, "Response from url: " + jsonStr);
             if (jsonStr != null) {

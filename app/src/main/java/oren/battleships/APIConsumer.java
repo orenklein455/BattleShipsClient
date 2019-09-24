@@ -28,6 +28,14 @@ public class APIConsumer {
     private String address;
     private String port;
 
+    public String joinRoom(String user, int room) throws Exception {
+        String url = protocol + "://"+ address + ":" + port + "/joinRoom";
+
+        String jsonStr = null;
+        jsonStr = this.SendPost(url, user + "_" + room);
+        return jsonStr;
+    }
+
     public APIConsumer(String protocol, String address, String port) {
         this.protocol = protocol;
         this.address = address;

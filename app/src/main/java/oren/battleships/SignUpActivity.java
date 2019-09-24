@@ -91,8 +91,6 @@ public class SignUpActivity extends AppCompatActivity {
             parameters.put("password", txtPass.getText().toString());
         }
 
-
-
         @Override
         protected Void doInBackground(Void...args0)  {
             APIConsumer apiConsumer = new APIConsumer(getString(R.string.protocol), getString(R.string.server_ip), getString(R.string.server_port));
