@@ -226,7 +226,8 @@ public class InGameActivity extends AppCompatActivity {
             String jsonStrReceived = null;
 
             try {
-                jsonStrReceived = apiConsumer.SendPost(url, jsonStrSent);
+                Map result = apiConsumer.sendBoard(board_to_send);
+                jsonStrReceived = (String) result.get("message");
             } catch (Exception e) {
                 e.printStackTrace();
             }

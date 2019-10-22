@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import oren.battleships.model.Board;
+
 
 public class APIConsumer {
     private static final String TAG = APIConsumer.class.getSimpleName();
@@ -103,6 +105,18 @@ public class APIConsumer {
         parameters.put("room_number", room_number + "");
         Map<String, Object> result = this.send_post(endpoint, parameters);
         return result;
+    }
+
+    public Map sendBoard(Board boart_to_send) throws Exception {
+        String endpoint = "/sendBoard";
+        String url = this.protocol + "://"+ this.address + ":" + this.port + endpoint;
+        Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
+        String prettyJson = prettyGson.toJson(boart_to_send);
+        Gson gson = new Gson();
+        String jsonString = this.SendPost(url, prettyJson);
+        Type ResultMap = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> parsedJson = gson.fromJson(jsonString, ResultMap);
+        return parsedJson;
     }
 
     public String SendPost(String reqUrl, String message) throws Exception {
