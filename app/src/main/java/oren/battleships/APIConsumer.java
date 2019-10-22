@@ -1,12 +1,10 @@
 package oren.battleships;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -109,7 +107,6 @@ public class APIConsumer {
         con.setDoOutput(true);
         con.setRequestProperty("Content-Type", "application/json; utf-8");
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-//        wr.writeBytes(ParameterStringBuilder.getParamsString(parameters));
         wr.writeBytes(message);
         wr.flush();
         wr.close();

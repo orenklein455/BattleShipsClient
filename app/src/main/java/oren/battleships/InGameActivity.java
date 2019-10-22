@@ -32,58 +32,69 @@ public class InGameActivity extends AppCompatActivity {
     public String last_status, user;
     private int roomNumber, current_ship;
     private TextView status_display;
-    private Board currentBoard;
     private Point first_point, second_point;
     private ScheduledExecutorService exec;
     private String TAG = InGameActivity.class.getSimpleName();
 
     @Override
+    //this function defines 2 boards (model), draws 2 boards (view), run checkStatus
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_game);
+
         sent_my_board = false;
 
         tableMyBoard = (TableLayout) findViewById(R.id.tableMyBoard);
         tableOpponentBoard = (TableLayout) findViewById(R.id.opponent_table);
         status_display = (TextView) findViewById(R.id.status_display);
 
-        setBoardDefinition(false);
-        setBoardDefinition(true);
+        setBoardDefinition(false); //create opponent's board (model)
+        setBoardDefinition(true); //create my board (model)
 
-        this.roomNumber = getIntent().getIntExtra("ROOM_NUMBER", -1);
-        this.user = getIntent().getStringExtra("USER");
+        this.roomNumber = getIntent().getIntExtra("ROOM_NUMBER", -1); //get room's number from previous activity
+        this.user = getIntent().getStringExtra("USER"); //get user's name from previous activity
 
         MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getBoard().setBoardOwner(user);
         MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getBoard().setBoardRoom(roomNumber);
 
-        exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleWithFixedDelay(new Runnable() {
+        exec = Executors.newSingleThreadScheduledExecutor(); //create a new executor
+        exec.scheduleWithFixedDelay(new Runnable() { //create a new runnable and run it every second
             @Override
             public void run() {
-                    new checkStatus().execute();
+                    new checkStatus().execute(); //create a new task and run it
                 }
         }, 0, 1000, TimeUnit.MILLISECONDS);
 
-        DrawBoard(true, this.roomNumber);
-        DrawBoard(false, this.roomNumber);
-        this.currentBoard = MyApplication.getInstance().getMyAllRooms()[InGameActivity.this.roomNumber].getGame().getBoard();
+        DrawBoard(true, this.roomNumber); //draw my board (view)
+        DrawBoard(false, this.roomNumber); //draw opponent's board (view)
+
     }
 
-    protected void setBoardDefinition(boolean myBoard) {
+
+    //this function defines board
+    protected void setBoardDefinition(boolean isMyBoard) {
         current_ship = 0;
         final TableLayout currentBoardGrid;
+        final Board currentBoardData;
 
-        if (myBoard) currentBoardGrid = tableMyBoard;
-        else currentBoardGrid = tableOpponentBoard;
+        if (isMyBoard) {
+            currentBoardGrid = tableMyBoard; //check whether it's my board or the opponent's one
+            currentBoardData = MyApplication.getInstance().getMyAllRooms()[InGameActivity.this.roomNumber].getGame().getBoard();
 
-        for (int i = 0; i < currentBoardGrid.getChildCount(); i++) {
+        }
+        else {
+            currentBoardGrid = tableOpponentBoard;
+            currentBoardData = MyApplication.getInstance().getMyAllRooms()[InGameActivity.this.roomNumber].getGame().getOpponentBoard();
+        }
+
+        for (int i = 0; i < currentBoardGrid.getChildCount(); i++) { //for each row
 
             TableRow row = (TableRow) currentBoardGrid.getChildAt(i);
 
-            for (int j = 0; j < row.getChildCount(); j++) {
+            for (int j = 0; j < row.getChildCount(); j++) { //for each button
                 Button btn = (Button) row.getChildAt(j);
 
-                if (myBoard) {
+                if (isMyBoard) { //enable or disable button, add a relevant tag
                     btn.setEnabled(true);
                     btn.setTag(i + "_" + j + "_" + "player");
                 } else {
@@ -91,62 +102,65 @@ public class InGameActivity extends AppCompatActivity {
                     btn.setTag(i + "_" + j + "_" + "opponent");
                 }
 
-                btn.setOnClickListener(new View.OnClickListener() {
+                btn.setOnClickListener(new View.OnClickListener() { //set a listener
+
                     @Override
                     public void onClick(View view) {
                         Button buttonPressed = (Button) view;
                         if (buttonPressed.getTag() != null) {
+
+                            //check which board and which cell were clicked.
                             String button_tag = buttonPressed.getTag().toString();
                             String buttonXY[] = button_tag.split("_");
                             if (buttonXY.length == 3) {
                                 int button_x = Integer.parseInt(buttonXY[0]);
                                 int button_y = Integer.parseInt(buttonXY[1]);
                                 String board_owner = buttonXY[2];
-                                //TODO - pass this logic to board
-                                if (board_owner.equals("player") && (MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getBoard().getState() == Board.BoardStateEnum.EMPTY || MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getBoard().getState() == Board.BoardStateEnum.PREPARATION)) {
-                                    if (currentBoard.getCells()[button_x][button_y].getState() == Cell.StateEnum.EMPTY) {
-                                        if (current_ship == 0 && currentBoard.getPreparationState()[current_ship] == 1) {
-                                            double distance = Math.hypot(first_point.x - button_x, first_point.y - button_y);
+
+                                //if board is mine and empty\preparation,
+                                if (board_owner.equals("player") && (currentBoardData.getState() == Board.BoardStateEnum.EMPTY || currentBoardData.getState() == Board.BoardStateEnum.PREPARATION)) {
+                                    if (currentBoardData.getCells()[button_x][button_y].getState() == Cell.StateEnum.EMPTY) { //if cell is empty
+
+                                        //the next checks are general (it does fit a random ship number\size)
+                                        if (currentBoardData.getPreparationState()[current_ship] == 0) first_point = new Point(button_x,button_y);
+                                        if (currentBoardData.getPreparationState()[current_ship] == 1) {
+                                            double distance = Math.hypot(first_point.x - button_x, first_point.y - button_y); //hypot is sum of the parameters' root
                                             if (distance != 1) {
-                                                showMessage();
+                                                showBadLocationMessage();
+                                                return;
+                                            }
+                                            second_point = new Point(button_x,button_y);
+                                        }
+
+                                        if (currentBoardData.getPreparationState()[current_ship] > 1) {
+                                            if (((first_point.x == second_point.x) && (second_point.x == button_x)) || ((first_point.y == second_point.y) && (second_point.y == button_y))) {
+                                                double distance1 = Math.hypot(first_point.x - button_x, first_point.y - button_y);
+                                                double distance2 = Math.hypot(second_point.x - button_x, second_point.y - button_y);
+
+                                                if (distance1 == 1) first_point.set(button_x,button_y);
+                                                else if (distance2 == 1) second_point.set(button_x,button_y);
+                                                else {
+                                                    showBadLocationMessage();
+                                                    return;
+                                                }
+                                            }
+                                            else {
+                                                showBadLocationMessage();
                                                 return;
                                             }
                                         }
 
-                                        if (current_ship == 0 && currentBoard.getPreparationState()[current_ship] == 2) {
-                                            double distance = Math.hypot(first_point.x - button_x, first_point.y - button_y);
-                                            double distance2 = Math.hypot(second_point.x - button_x, second_point.y - button_y);
+                                        currentBoardData.getCells()[button_x][button_y].setState(Cell.StateEnum.SHIP_PART); //put ship in the cell (model)
 
-                                            if (((first_point.x == second_point.x) && (second_point.x != button_x)) ||
-                                                    ((first_point.y == second_point.y) && (second_point.y != button_y)) ||
-                                                    (distance != 1 && distance2 != 1)) {
-                                                showMessage();
-                                                return;
-                                            }
+                                        //if ship is not completed yet
+                                        if (currentBoardData.getPreparationState()[current_ship] < currentBoardData.getShipDesiredLength()[current_ship]) {
+                                            currentBoardData.getPreparationState()[current_ship]++; //update ship's preparation state
+                                            if (current_ship + 1 == currentBoardData.getPreparationState().length) //update board's state
+                                                currentBoardData.setState(Board.BoardStateEnum.READY);
+                                            else currentBoardData.setState(Board.BoardStateEnum.PREPARATION);
                                         }
 
-                                        if (current_ship == 1 && currentBoard.getPreparationState()[current_ship] == 1) {
-                                            double distance = Math.hypot(first_point.x - button_x, first_point.y - button_y);
-                                            if (distance != 1) {
-                                                showMessage();
-                                                return;
-                                            }
-                                        }
-
-                                        if (currentBoard.getShipDesiredLength()[current_ship] > 1 && currentBoard.getPreparationState()[current_ship] == 0)
-                                            first_point = new Point(button_x, button_y);
-                                        if (currentBoard.getShipDesiredLength()[current_ship] > 1 && currentBoard.getPreparationState()[current_ship] == 1)
-                                            second_point = new Point(button_x, button_y);
-
-                                        InGameActivity.this.currentBoard.getCells()[button_x][button_y].setState(Cell.StateEnum.SHIP_PART);
-
-                                        if (InGameActivity.this.currentBoard.getPreparationState()[current_ship] < InGameActivity.this.currentBoard.getShipDesiredLength()[current_ship]) {
-                                            InGameActivity.this.currentBoard.getPreparationState()[current_ship]++;
-                                            InGameActivity.this.currentBoard.setState(Board.BoardStateEnum.PREPARATION);
-                                            if (current_ship + 1 == InGameActivity.this.currentBoard.getPreparationState().length)
-                                                InGameActivity.this.currentBoard.setState(Board.BoardStateEnum.READY); //last ship has been located, then board is ready.
-                                        }
-                                    } else {
+                                    } else { //if cell isn't empty
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -160,16 +174,16 @@ public class InGameActivity extends AppCompatActivity {
                                     DrawBoard(true, InGameActivity.this.roomNumber);
                                 }
 
-                                if (board_owner.equals("opponent") && MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getBoard().getState().equals(Board.BoardStateEnum.READY)) {
+                                if (board_owner.equals("opponent") && currentBoardData.getState().equals(Board.BoardStateEnum.READY)) {
                                     //if cell is empty, set to bombed
-                                    if (MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getOpponentBoard().getCells()[button_x][button_y].getState().equals(Cell.StateEnum.EMPTY))
-                                        MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getOpponentBoard().getCells()[button_x][button_y].setState(Cell.StateEnum.BOMBED);
+                                    if (currentBoardData.getCells()[button_x][button_y].getState().equals(Cell.StateEnum.EMPTY))
+                                        currentBoardData.getCells()[button_x][button_y].setState(Cell.StateEnum.BOMBED);
                                         //if cell is ship, set to bombed ship
-                                    else if (MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getOpponentBoard().getCells()[button_x][button_y].getState() == Cell.StateEnum.SHIP_PART)
-                                        MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getOpponentBoard().getCells()[button_x][button_y].setState(Cell.StateEnum.BOMBED_SHIP_PART);
-                                        //if cell is bombed or bombedShip, showMessage
-                                    else if (MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getOpponentBoard().getCells()[button_x][button_y].getState() == Cell.StateEnum.BOMBED || MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getOpponentBoard().getCells()[button_x][button_y].getState() == Cell.StateEnum.BOMBED_SHIP_PART) {
-                                        showMessage2();
+                                    else if (currentBoardData.getCells()[button_x][button_y].getState() == Cell.StateEnum.SHIP_PART)
+                                        currentBoardData.getCells()[button_x][button_y].setState(Cell.StateEnum.BOMBED_SHIP_PART);
+                                        //if cell is bombed or bombedShip, showMessage (it's possible to delete the condition, assuming we have 4 states)
+                                    else if (currentBoardData.getCells()[button_x][button_y].getState() == Cell.StateEnum.BOMBED || currentBoardData.getCells()[button_x][button_y].getState() == Cell.StateEnum.BOMBED_SHIP_PART) {
+                                        showBombedAlreadyMessage();
                                         return;
                                     }
                                     enableButtons(tableOpponentBoard, false);
@@ -199,7 +213,7 @@ public class InGameActivity extends AppCompatActivity {
             String jsonStrSent = null;
             Board board_to_send = null;
             if (args0[0].equals("myBoard")) {
-                board_to_send = MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getBoard();
+                board_to_send = MyApplication.getInstance().getMyAllRooms()[InGameActivity.this.roomNumber].getGame().getBoard();
                 board_to_send.setBoardOwner(user);
             } else if (args0[0].equals("opBoard")) board_to_send = MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getOpponentBoard();
 
@@ -392,14 +406,15 @@ public class InGameActivity extends AppCompatActivity {
         }
     }
 
-    private void showMessage() {
+    private void showBadLocationMessage() {
         Toast.makeText(this, R.string.bad_location, Toast.LENGTH_SHORT).show();
     }
 
-    private void showMessage2 () {
-        Toast.makeText(this, R.string.bad_choice, Toast.LENGTH_SHORT).show();
+    private void showBombedAlreadyMessage () {
+        Toast.makeText(this, R.string.bombed_already, Toast.LENGTH_SHORT).show();
     }
 
+    //enable the button to be clickable or disable it
        private void enableButtons(TableLayout table, Boolean enabled) {
            Button btn;
            TableRow row;
@@ -412,7 +427,8 @@ public class InGameActivity extends AppCompatActivity {
            }
        }
 
-    private  void startTimer(final long milisec, long interval, final String text) {
+    //timer for the checkStatus to be scheduled
+       private  void startTimer(final long milisec, long interval, final String text) {
 
         CountDownTimer cTimer = new CountDownTimer(milisec, interval) {
 
@@ -431,43 +447,44 @@ public class InGameActivity extends AppCompatActivity {
         cTimer.start();
     }
 
-    public void DrawBoard(boolean myBoard, int roomNumber) {
+    //this function draws a board (my one or the opp's one)
+    public void DrawBoard(boolean isMyBoard, int roomNumber) {
         Board currentBoardData;
         TableLayout currentBoardGrid;
-        if (myBoard) {
-            currentBoardData = MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getBoard();
+        if (isMyBoard) {
+            currentBoardData = MyApplication.getInstance().getMyAllRooms()[InGameActivity.this.roomNumber].getGame().getBoard();
             currentBoardGrid = tableMyBoard;
             if ((currentBoardData.getState() == Board.BoardStateEnum.EMPTY || currentBoardData.getState() == Board.BoardStateEnum.PREPARATION) && !exec.isShutdown()) //if board isn't ready
             {
                 current_ship = currentBoardData.getPreparationNeededShip();     //get an incomplete ship
-                if (current_ship != -1 && current_ship < currentBoardData.getPreparationState().length)
+                if (current_ship != -1 && current_ship < currentBoardData.getPreparationState().length) //if there is an incomplete ship
                 {
                     status_display.setText("You placed  " + (currentBoardData.getPreparationState()[current_ship]) + " cells out of " + (currentBoardData.getShipDesiredLength()[current_ship]) + " ship's cells");
-
-                    //if there is an incomplete ship
                 }
-            } else {
+            }
+            else { //else the board is ready
                 if (!sent_my_board) { //if it's first run (I haven't sent the board yet) then send it..
                     status_display.setText("All ship have been placed successfully");
                     sent_my_board = true;
                     new sendBoard().execute("myBoard");
                 }
-
                 enableButtons(tableMyBoard, false);
             }
-        } else {
+        }
+        else { //else it's the opponent's board
             currentBoardData = MyApplication.getInstance().getMyAllRooms()[roomNumber].getGame().getOpponentBoard();
             currentBoardGrid = tableOpponentBoard;
         }
 
         Cell[][] myCells = currentBoardData.getCells();
 
+        //draw the relevant board
         for (int i = 0; i < currentBoardGrid.getChildCount(); i++) {
             TableRow row = (TableRow) currentBoardGrid.getChildAt(i);
             for (int j = 0; j < row.getChildCount(); j++) {
                 Button btn = (Button) row.getChildAt(j);
                 Cell x = myCells[i][j];
-
+                                                //set the view of each cell, according to the data (in the model)
                 switch (x.getState()) {
                     case BOMBED:
                         btn.setText("B");
@@ -482,7 +499,7 @@ public class InGameActivity extends AppCompatActivity {
 
                         break;
                     case SHIP_PART:
-                        if (myBoard)
+                        if (isMyBoard)
                             btn.setText("SP");
 
                         break;

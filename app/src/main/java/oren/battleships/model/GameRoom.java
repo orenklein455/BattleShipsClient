@@ -7,7 +7,6 @@ public class GameRoom {
     private GameRoomState currentState;
     private enum GameRoomState{Empty, Not_empty, Full}
 
-    //game getter & setter
     public Game getGame() {
         return game;
     }
@@ -27,7 +26,6 @@ public class GameRoom {
         this.game = new Game();
     }
 
-    //currentState getter & setter
     public GameRoomState getCurrentState() {
         return currentState;
     }

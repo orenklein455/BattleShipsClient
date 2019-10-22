@@ -7,7 +7,6 @@ public class MyApplication {
     private static MyApplication instance;
     private GameRoom[] myAllRooms ;
 
-    //instance getters
     public static MyApplication getInstance()
     {
         if (instance == null)
@@ -25,7 +24,6 @@ public class MyApplication {
         myAllRooms[2] = new GameRoom("Room2");
     }
 
-    //myAllrooms getter&setter
     public GameRoom[] getMyAllRooms() {
         return myAllRooms;
     }
