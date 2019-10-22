@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -254,7 +255,8 @@ public class InGameActivity extends AppCompatActivity {
 
             String jsonStr = null;
             try {
-                jsonStr = apiConsumer.SendPost(url, msg);
+                Map result = apiConsumer.checkStatus(user, roomNumber);
+                jsonStr = (String) result.get("message");
 
             } catch (Exception e) {
                 e.printStackTrace();

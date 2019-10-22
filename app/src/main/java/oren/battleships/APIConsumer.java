@@ -98,6 +98,15 @@ public class APIConsumer {
         return this.SendPost(url, prettyJson);
     }
 
+    public Map checkStatus(String username, int room_number) throws Exception {
+        String endpoint = "/checkStatus";
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put("username", username);
+        parameters.put("room_number", room_number + "");
+        Map<String, Object> result = this.send_post(endpoint, parameters);
+        return result;
+    }
+
     public String SendPost(String reqUrl, String message) throws Exception {
         URL obj = new URL(reqUrl);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
