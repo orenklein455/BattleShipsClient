@@ -54,7 +54,7 @@
     <string name="signed_in">You are signed in </string>
 
     <string name="bad_location">Ship can be placed in horizontally or vertically adjacent cells only </string>
-    <string name="bad_choice">You have already bombed this cell </string>
+    <string name="bombed_already">You have already bombed this cell </string>
 
     <string name="full_room">Room is full </string>
     <string name="update_succeded">Update succeded </string>

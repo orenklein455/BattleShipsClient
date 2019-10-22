@@ -7,12 +7,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText txtUserN;
     private EditText txtPassword;
-    private Button buttonSignIn;
-    private Button btnSignUp;
-    private Button btnForgotPassword;
+
     private String TAG = MainActivity.class.getSimpleName();
     public static Intent intent;
     public static String username;
@@ -34,9 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
         txtUserN = (EditText)findViewById(R.id.txtUsername);
         txtPassword = (EditText)findViewById(R.id.txtPassword);
-        buttonSignIn = (Button)findViewById(R.id.btnSignIN);
-        btnSignUp = (Button)findViewById(R.id.btnSignUP);
-        btnForgotPassword = (Button)findViewById(R.id.btnForgetPassword);
     }
 
     public boolean Validate()

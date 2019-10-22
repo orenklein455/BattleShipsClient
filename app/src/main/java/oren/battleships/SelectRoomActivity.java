@@ -201,7 +201,7 @@ public class SelectRoomActivity extends AppCompatActivity {
 
     public void join1Pressed(View view)
     {
-        new joinRoom().execute(0);
+        new joinRoom().execute(2);
     }
 
     public void join2Pressed(View view)
@@ -211,6 +211,6 @@ public class SelectRoomActivity extends AppCompatActivity {
 
     public void join3Pressed(View view)
     {
-        new joinRoom().execute(2);
+        new joinRoom().execute(0);
     }
 }
