@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -24,10 +25,10 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        txtUser = (EditText)findViewById(R.id.NewTxtUsername);
-        txtPass = (EditText)findViewById(R.id.newTxtPassword);
-        txtPass2 = (EditText)findViewById(R.id.txtPassword);
-        txtMail = (EditText)findViewById(R.id.txtEmail);
+        txtUser = findViewById(R.id.NewTxtUsername);
+        txtPass = findViewById(R.id.newTxtPassword);
+        txtPass2 = findViewById(R.id.txtPassword);
+        txtMail = findViewById(R.id.txtEmail);
     }
 
     public boolean Validate() {

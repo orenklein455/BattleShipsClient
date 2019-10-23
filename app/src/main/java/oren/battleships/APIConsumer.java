@@ -1,10 +1,12 @@
 package oren.battleships;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -19,9 +21,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import oren.battleships.model.Board;
-
-
+//This is an infrastructure class which is mostly taken from the internet. I use it to communicate with the server.
 public class APIConsumer {
     private static final String TAG = APIConsumer.class.getSimpleName();
     private String protocol;
@@ -98,27 +98,6 @@ public class APIConsumer {
         return this.SendPost(url, prettyJson);
     }
 
-    public Map checkStatus(String username, int room_number) throws Exception {
-        String endpoint = "/checkStatus";
-        HashMap<String, String> parameters = new HashMap<>();
-        parameters.put("username", username);
-        parameters.put("room_number", room_number + "");
-        Map<String, Object> result = this.send_post(endpoint, parameters);
-        return result;
-    }
-
-    public Map sendBoard(Board boart_to_send) throws Exception {
-        String endpoint = "/sendBoard";
-        String url = this.protocol + "://"+ this.address + ":" + this.port + endpoint;
-        Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
-        String prettyJson = prettyGson.toJson(boart_to_send);
-        Gson gson = new Gson();
-        String jsonString = this.SendPost(url, prettyJson);
-        Type ResultMap = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> parsedJson = gson.fromJson(jsonString, ResultMap);
-        return parsedJson;
-    }
-
     public String SendPost(String reqUrl, String message) throws Exception {
         URL obj = new URL(reqUrl);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -130,6 +109,7 @@ public class APIConsumer {
         con.setDoOutput(true);
         con.setRequestProperty("Content-Type", "application/json; utf-8");
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+//        wr.writeBytes(ParameterStringBuilder.getParamsString(parameters));
         wr.writeBytes(message);
         wr.flush();
         wr.close();

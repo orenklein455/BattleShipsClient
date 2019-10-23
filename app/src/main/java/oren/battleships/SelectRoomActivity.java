@@ -6,73 +6,59 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class SelectRoomActivity extends AppCompatActivity {
 
-    private TextView txtUserDisplay,txtScoreDisplay;
-    public static int room;
-    public static String user;
-    public static String user_score;
-
+    private TextView txtScoreDisplay;
+    private int room;
+    private String user, user_score;
     private String TAG = SelectRoomActivity.class.getSimpleName();
-
-    public static ArrayList<String> room_state;
-    public static ArrayList<String> room_name;
-    public static String[] top_user;
-    public static String[] top_score;
-    public static ArrayList<Map<String, String>> top_users;
-    public static TextView[] room_stat_disp;
-    public static TextView[] room_name_disp;
-    public static TextView[] score_disp;
-    public static TextView[] place_disp;
-
+    private ArrayList<String> room_state;
+    private ArrayList<String> room_name;
+    private ArrayList<Map<String, String>> top_users;
+    private TextView[] room_stat_disp, room_name_disp, score_disp, place_disp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        room_state = new ArrayList<>();
-        room_name = new ArrayList<>();
-        top_user = new String[3];
-        top_score = new String[3];
-        room_stat_disp = new TextView[3];
-        room_name_disp = new TextView[3];
-        score_disp = new TextView[3];
-        place_disp = new TextView[3];
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_room);
+
+        room_state = new ArrayList<>();
+        room_name = new ArrayList<>();
+        int room_quantity = 3;
+        room_stat_disp = new TextView[room_quantity];
+        room_name_disp = new TextView[room_quantity];
+        int top_users_quantity = 3;
+        score_disp = new TextView[room_quantity];
+        place_disp = new TextView[room_quantity];
+
         user = getIntent().getStringExtra("USER");
-        txtUserDisplay = (TextView)findViewById(R.id.userNameDisplay);
+        TextView txtUserDisplay = findViewById(R.id.userNameDisplay);
         txtUserDisplay.setText(user);
 
-        txtScoreDisplay = (TextView)findViewById(R.id.scoreDisplay);
+        txtScoreDisplay = findViewById(R.id.scoreDisplay);
 
-        place_disp[0] = (TextView)findViewById(R.id.first_player);
-        place_disp[1] = (TextView)findViewById(R.id.second_player);
-        place_disp[2] = (TextView)findViewById(R.id.third_player);
+        for (int i = 0; i < room_quantity; i++) {
+            int roomNameViewID = getResources().getIdentifier("roomName_" + i, "id", getPackageName());
+            int roomStatViewID = getResources().getIdentifier("roomStatus_" + i, "id", getPackageName());
+            room_name_disp[i] = findViewById(roomNameViewID);
+            room_stat_disp[i] = findViewById(roomStatViewID);
+        }
 
-        score_disp[0] = (TextView)findViewById(R.id.first_score);
-        score_disp[1] = (TextView)findViewById(R.id.second_score);
-        score_disp[2] = (TextView)findViewById(R.id.third_score);
-
-        room_stat_disp[0] = (TextView)findViewById(R.id.room1Status);
-        room_stat_disp[1] = (TextView)findViewById(R.id.room2Status);
-        room_stat_disp[2] = (TextView)findViewById(R.id.room3Status);
-
-        room_name_disp[0] = (TextView)findViewById(R.id.room1Name);
-        room_name_disp[1] = (TextView)findViewById(R.id.room2Name);
-        room_name_disp[2] = (TextView)findViewById(R.id.room3Name);
-
+        for (int i = 0; i < top_users_quantity; i++) {
+            int topUserViewID = getResources().getIdentifier("topUser_" + i, "id", getPackageName());
+            int topScoreViewID = getResources().getIdentifier("topScore_" + i, "id", getPackageName());
+            place_disp[i] = findViewById(topUserViewID);
+            score_disp[i] = findViewById(topScoreViewID);
+        }
 
         new GetLobbyData().execute();
-
     }
 
     private class GetLobbyData extends AsyncTask<Void, Void, Void> {
@@ -116,7 +102,6 @@ public class SelectRoomActivity extends AppCompatActivity {
                             for (i = 0; i < room_name.size(); i++) {
                                 room_stat_disp[i].setText(room_state.get(i));
                                 room_name_disp[i].setText(room_name.get(i));
-
                             }
                         }
                     });

@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText txtUserN;
     private EditText txtPassword;
-
     private String TAG = MainActivity.class.getSimpleName();
     public static Intent intent;
-    public static String username;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { // activity's previously saved state

@@ -1,5 +1,6 @@
 package oren.battleships.model;
 
+
 public class Player {
     private String userName;
 
@@ -11,4 +12,5 @@ public class Player {
         this.userName = userName;
 
     }
+
 }

@@ -5,9 +5,11 @@ import java.util.ArrayList;
 public class Game {
 
     public enum GameState{ACTIVE, CREATING ,GAME_OVER}
+
     private final int NUM_PLAYERS = 2;
     private GameState state;
     private ArrayList<Player> players;
+    private int playerTurn;
     private Board board;
     private Board opponent_board;
     public Boolean winner_knows;
@@ -32,6 +34,7 @@ public class Game {
         loser_knows = false;
     }
 
+    //state getter & setter
     public GameState getState() {
         return state;
     }
@@ -39,17 +42,19 @@ public class Game {
         this.state = state;
     }
 
+    //players getter
     public ArrayList<Player> getPlayers() {
         return players;
     }
 
+    //get specific player
     public Player getPlayer(int playerIndex) throws Exception {
         if ((playerIndex >= NUM_PLAYERS) || (playerIndex < 0)) {
             throw new Exception("Invalid player index: " + playerIndex);
         }
         return players.get(playerIndex);
     }
-
+    //add specific player
     public void addPlayer(Player player) throws Exception {
         if (players.size() >= NUM_PLAYERS) {
             throw new Exception("Too many players in game");
@@ -57,12 +62,21 @@ public class Game {
         players.add(player);
     }
 
-    public Board getBoard() { return board; }
+//    //playerTurn getter & setter
+//    public int getPlayerTurn() {
+//        return playerTurn;
+//    }
+//    public void setNextPlayerTurn () {
+//        playerTurn = (playerTurn++)%2;
+//    }
 
+    //board getter & setter
+    public Board getBoard() { return board; }
     public void setBoard(Board board) {
         this.board = board;
     }
 
+    //opponent_board getter & setter
     public Board getOpponentBoard() { return this.opponent_board; }
 
     public void setOpponentBoard(Board board) {
